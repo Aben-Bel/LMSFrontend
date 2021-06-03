@@ -96,6 +96,7 @@ const courses = [
 
 export default function AlbumCourses(props) {
   const classes = useStyles();
+  const limit = 100;
   const { categoryId, categoryDescription, categoryTitle } =
     props.location.state.data;
 
@@ -144,7 +145,12 @@ export default function AlbumCourses(props) {
                       <Typography gutterBottom variant="h5" component="h2">
                         {card.head}
                       </Typography>
-                      <Typography>{card.description}</Typography>
+                      <Typography>
+                        {card.description.slice(0, limit)}
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        by {card.author}
+                      </Typography>
                     </CardContent>
                     <CardActions>
                       <Button size="small" color="primary">

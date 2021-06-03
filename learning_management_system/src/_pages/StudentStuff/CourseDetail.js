@@ -65,10 +65,11 @@ export default function CourseDetail(props) {
     id: 0,
     type: "",
     title: "",
+    courseAuthor: "Author",
   });
 
   function toObj(id, title, type) {
-    return { id, title, contentType: type, ...props.data };
+    return { id, title, contentType: type, ...props.location.state.data };
   }
 
   function onClickHandlerList(id, title, contentType) {

@@ -1,4 +1,6 @@
 import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
+import Note from "./Note";
+import Quiz from "./Quiz";
 import VideoC from "./VideoC";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,11 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
   row: {
     display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    background: "#dff5e5",
-  },
-  author: {
+    flexDirection: "column",
     marginTop: theme.spacing(5),
     marginLeft: theme.spacing(5),
   },
@@ -25,17 +23,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Content(props) {
   const classes = useStyles();
-
   const { id, title, contentType, courseAuthor } = props.data;
   const type = contentType ? contentType.toLowerCase() : "";
+  console.log("Author: ", courseAuthor);
 
   return (
     <Card className={classes.root}>
       <div className={classes.details}>
         <div className={classes.row}>
+          <Typography
+            component="h3"
+            variant="h4"
+            align="left"
+            color="textPrimary"
+            gutterBottom
+          >
+            {title}
+          </Typography>
           <div className={classes.author}>
             <Typography variant="subtitle1" color="textSecondary">
-              {courseAuthor}
+              by {courseAuthor}
             </Typography>
           </div>
         </div>
@@ -49,13 +56,13 @@ export default function Content(props) {
 
           {type.includes("quiz") && (
             <div>
-              <div>Quiz</div>
+              <Quiz />
             </div>
           )}
 
           {type.includes("note") && (
             <div>
-              <div>Note</div>
+              <Note />
             </div>
           )}
         </CardContent>
