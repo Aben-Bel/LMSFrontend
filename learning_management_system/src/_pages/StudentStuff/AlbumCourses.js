@@ -38,15 +38,60 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const courses = [
-  { id: 0, head: "Chapter 1", description: "Lorem ipsum lara ip merol" },
-  { id: 1, head: "Chapter 2", description: "Lorem ipsum lara ip merol" },
-  { id: 2, head: "Chapter 3", description: "Lorem ipsum lara ip merol" },
-  { id: 3, head: "Chapter 4", description: "Lorem ipsum lara ip merol" },
-  { id: 4, head: "Chapter 5", description: "Lorem ipsum lara ip merol" },
-  { id: 5, head: "Chapter 6", description: "Lorem ipsum lara ip merol" },
-  { id: 6, head: "Chapter 7", description: "Lorem ipsum lara ip merol" },
-  { id: 7, head: "Chapter 8", description: "Lorem ipsum lara ip merol" },
-  { id: 8, head: "Chapter 9", description: "Lorem ipsum lara ip merol" },
+  {
+    id: 0,
+    head: "Chapter 1",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
+  {
+    id: 1,
+    head: "Chapter 2",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
+  {
+    id: 2,
+    head: "Chapter 3",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
+  {
+    id: 3,
+    head: "Chapter 4",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
+  {
+    id: 4,
+    head: "Chapter 5",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
+  {
+    id: 5,
+    head: "Chapter 6",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
+  {
+    id: 6,
+    head: "Chapter 7",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
+  {
+    id: 7,
+    head: "Chapter 8",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
+  {
+    id: 8,
+    head: "Chapter 9",
+    description: "Lorem ipsum lara ip merol",
+    author: "Abenezer",
+  },
 ];
 
 export default function AlbumCourses(props) {
@@ -84,6 +129,7 @@ export default function AlbumCourses(props) {
                         courseId: card.id,
                         courseTitle: card.head,
                         courseDescription: card.description,
+                        courseAuthor: card.author,
                       },
                     },
                   }}

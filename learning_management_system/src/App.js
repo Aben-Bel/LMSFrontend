@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     marginRight: theme.spacing(1),
   },
+  zindexhigh: {
+    zIndex: 10000000,
+  },
 }));
 
 function App() {
@@ -64,7 +67,7 @@ function App() {
   return (
     <div>
       {currentUser && (
-        <AppBar position="sticky">
+        <AppBar className={classes.zindexhigh} position="sticky">
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
               {Role[currentUser.role]}

@@ -1,17 +1,13 @@
-import { CardMedia } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
 import { ReactVideo } from "reactjs-media";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    justifySelf: "center",
     justifyContent: "center",
   },
   details: {
@@ -51,11 +47,8 @@ export default function VideoC(props) {
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component="h5" variant="h5"></Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            Mac Miller
-          </Typography>
           <ReactVideo
-            src="https://www.example.com/url_to_video.mp4"
+            src={props.src}
             poster="https://www.example.com/poster.png"
             primaryColor="red"
             className={classes.video}

@@ -26,7 +26,7 @@ function Copyright() {
   );
 }
 
-const drawerWidth = 240;
+const drawerWidth = 315;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -98,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 0,
     paddingRight: 0,
     margin: 0,
+    marginLeft: "170px",
     widht: "100%",
   },
   paper: {
@@ -131,7 +132,7 @@ function LayoutWithDrawer(props) {
       >
         <div className={classes.toolbarIcon}>
           <Typography align="left" color="textPrimary">
-            {props.title}
+            {props.courseHeader}
           </Typography>
           <IconButton onClick={handleDrawerClose}>
             {open && <ChevronLeftIcon />}
@@ -139,7 +140,7 @@ function LayoutWithDrawer(props) {
           </IconButton>
         </div>
         <Divider />
-        <List>{props.mainListItems}</List>
+        <List className={classes.main}>{props.mainListItems}</List>
       </Drawer>
       <main className={classes.content}>
         <Container className={classes.container}>

@@ -8,6 +8,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
 import Content from "./Content";
+import HoverRating from "./HoverRating";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -17,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
   select: {
     backgroundColor: "#3f5160",
     color: "white",
+  },
+  full: {
+    width: "100%",
   },
 }));
 
@@ -52,6 +57,7 @@ export default function CourseDetail(props) {
     courseId,
     courseTitle,
     courseDescription,
+    courseAuthor,
   } = props.location.state.data;
 
   const [selected, setSelected] = useState(null);
@@ -73,8 +79,19 @@ export default function CourseDetail(props) {
   return (
     <div>
       <LayoutWithDrawer
-        title={categoryTitle + " > " + courseTitle}
-        content={<Content data={content} />}
+        courseHeader={
+          <div>
+            <div>
+              <Typography variant="subtitle1" color="textSecondary">
+                {categoryTitle} {" | "} {courseTitle}
+              </Typography>
+            </div>
+            <div className={classes.ratingArea}>
+              <HoverRating />
+            </div>
+          </div>
+        }
+        content={<Content className={classes.full} data={content} />}
         mainListItems={
           <div>
             {contents.map((ele) => (
