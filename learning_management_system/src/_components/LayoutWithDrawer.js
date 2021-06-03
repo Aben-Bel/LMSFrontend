@@ -130,6 +130,9 @@ function LayoutWithDrawer(props) {
         open={open}
       >
         <div className={classes.toolbarIcon}>
+          <Typography align="left" color="textPrimary">
+            {props.title}
+          </Typography>
           <IconButton onClick={handleDrawerClose}>
             {open && <ChevronLeftIcon />}
             {!open && <ChevronRightIcon />}

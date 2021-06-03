@@ -17,6 +17,7 @@ import { RegisterPage } from "./_pages/RegisterPage";
 import { configureFakeBackend } from "./_helpers/fake-backend";
 import AlbumCategory from "./_pages/StudentStuff/AlbumCategory";
 import AlbumCourses from "./_pages/StudentStuff/AlbumCourses";
+import CourseDetail from "./_pages/StudentStuff/CourseDetail";
 
 import {
   AppBar,
@@ -117,9 +118,9 @@ function App() {
 
         <PrivateRoute
           exact
-          path="/category/:head/courses/:head"
+          path="/category/:head/courses/:head/contents"
           roles={[Role.Student]}
-          component={AlbumCourses}
+          component={CourseDetail}
         />
       </Router>
     </div>

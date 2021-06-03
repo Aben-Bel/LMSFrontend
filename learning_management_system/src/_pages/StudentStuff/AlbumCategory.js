@@ -31,10 +31,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
-  title: {
-    marginLeft: theme.spacing(3),
-    marginTop: theme.spacing(3),
-  },
 }));
 
 const categories = [
@@ -56,18 +52,18 @@ export default function AlbumCategory(props) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Typography
-        component="h1"
-        variant="h2"
-        align="left"
-        color="textPrimary"
-        gutterBottom
-        className={classes.title}
-      >
-        Category
-      </Typography>
+
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
+          <Typography
+            component="h1"
+            variant="h2"
+            align="left"
+            color="textPrimary"
+            gutterBottom
+          >
+            Category
+          </Typography>
           <Grid container spacing={4}>
             {categories.map((card) => (
               <Grid item key={card.id} xs={12} sm={6} md={4}>

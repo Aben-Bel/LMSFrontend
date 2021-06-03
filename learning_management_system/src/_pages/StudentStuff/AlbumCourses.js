@@ -38,15 +38,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const courses = [
-  { id: 0, head: "One", description: "Lorem ipsum lara ip merol" },
-  { id: 1, head: "One", description: "Lorem ipsum lara ip merol" },
-  { id: 2, head: "One", description: "Lorem ipsum lara ip merol" },
-  { id: 3, head: "One", description: "Lorem ipsum lara ip merol" },
-  { id: 4, head: "One", description: "Lorem ipsum lara ip merol" },
-  { id: 5, head: "One", description: "Lorem ipsum lara ip merol" },
-  { id: 6, head: "One", description: "Lorem ipsum lara ip merol" },
-  { id: 7, head: "One", description: "Lorem ipsum lara ip merol" },
-  { id: 8, head: "One", description: "Lorem ipsum lara ip merol" },
+  { id: 0, head: "Chapter 1", description: "Lorem ipsum lara ip merol" },
+  { id: 1, head: "Chapter 2", description: "Lorem ipsum lara ip merol" },
+  { id: 2, head: "Chapter 3", description: "Lorem ipsum lara ip merol" },
+  { id: 3, head: "Chapter 4", description: "Lorem ipsum lara ip merol" },
+  { id: 4, head: "Chapter 5", description: "Lorem ipsum lara ip merol" },
+  { id: 5, head: "Chapter 6", description: "Lorem ipsum lara ip merol" },
+  { id: 6, head: "Chapter 7", description: "Lorem ipsum lara ip merol" },
+  { id: 7, head: "Chapter 8", description: "Lorem ipsum lara ip merol" },
+  { id: 8, head: "Chapter 9", description: "Lorem ipsum lara ip merol" },
 ];
 
 export default function AlbumCourses(props) {
@@ -57,18 +57,18 @@ export default function AlbumCourses(props) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Typography
-        component="h1"
-        variant="h2"
-        align="left"
-        color="textPrimary"
-        gutterBottom
-        className={classes.title}
-      >
-        {categoryTitle}
-      </Typography>
+
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
+          <Typography
+            component="h1"
+            variant="h2"
+            align="left"
+            color="textPrimary"
+            gutterBottom
+          >
+            {categoryTitle}
+          </Typography>
           <Grid container spacing={4}>
             {courses.map((card) => (
               <Grid item key={card.id} xs={12} sm={6} md={4}>
@@ -78,9 +78,12 @@ export default function AlbumCourses(props) {
                     state: {
                       from: props.location,
                       data: {
-                        categoryId: card.id,
-                        categoryTitle: card.head,
-                        categoryDescription: card.description,
+                        categoryId: categoryId,
+                        categoryTitle: categoryTitle,
+                        categoryDescription: categoryDescription,
+                        courseId: card.id,
+                        courseTitle: card.head,
+                        courseDescription: card.description,
                       },
                     },
                   }}
