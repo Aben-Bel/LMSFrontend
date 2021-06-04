@@ -16,19 +16,20 @@ export const authenticationService = {
 };
 
 function login(username, password) {
+  console.log("lets login: ", username, " ", password);
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
   };
 
-  return fetch(`www.example.com/users/authenticate`, requestOptions)
+  return fetch(`http://localhost:5000/Users/authenticate`, requestOptions)
     .then(handleResponse)
     .then((user) => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       localStorage.setItem("currentUser", JSON.stringify(user));
       currentUserSubject.next(user);
-
+      console.log("user", user);
       return user;
     });
 }

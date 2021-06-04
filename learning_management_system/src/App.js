@@ -29,7 +29,7 @@ import {
 import AccountPage from "./_pages/AccountPage";
 import GoBack from "./_helpers/GoBack";
 
-configureFakeBackend();
+// configureFakeBackend();
 
 const useStyles = makeStyles((theme) => ({
   root: {

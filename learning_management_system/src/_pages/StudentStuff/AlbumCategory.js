@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -14,6 +14,9 @@ import SimpleModal from "../../_components/Modal";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
+
+import { dataService } from "../../_services/data.service";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -52,34 +55,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const categories = [
-  { id: 0, head: "Maths", description: "Lorem ipsum lara ip merol" },
-  { id: 1, head: "Physics", description: "Lorem ipsum lara ip merol" },
-  { id: 2, head: "Biology", description: "Lorem ipsum lara ip merol" },
-  { id: 3, head: "Chemistry", description: "Lorem ipsum lara ip merol" },
-  { id: 4, head: "Social Studies", description: "Lorem ipsum lara ip merol" },
-  { id: 5, head: "History", description: "Lorem ipsum lara ip merol" },
-  { id: 6, head: "English", description: "Lorem ipsum lara ip merol" },
-  { id: 7, head: "Amharic", description: "Lorem ipsum lara ip merol" },
-  { id: 8, head: "Sports", description: "Lorem ipsum lara ip merol" },
-];
+// let categories = [
+//   { id: 0, title: "Maths", description: "Lorem ipsum lara ip merol" },
+//   { id: 1, title: "Physics", description: "Lorem ipsum lara ip merol" },
+//   { id: 2, title: "Biology", description: "Lorem ipsum lara ip merol" },
+//   { id: 3, title: "Chemistry", description: "Lorem ipsum lara ip merol" },
+//   { id: 4, title: "Social Studies", description: "Lorem ipsum lara ip merol" },
+//   { id: 5, title: "History", description: "Lorem ipsum lara ip merol" },
+//   { id: 6, title: "English", description: "Lorem ipsum lara ip merol" },
+//   { id: 7, title: "Amharic", description: "Lorem ipsum lara ip merol" },
+//   { id: 8, title: "Sports", description: "Lorem ipsum lara ip merol" },
+// ];
 
 export default function AlbumCategory(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState({});
+  const [data, setData] = React.useState([]);
+  const [isLoading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    dataService.getCategories().then((data) => {
+      setData(data);
+      setLoading(false);
+    });
+  }, []);
 
   const user = props.user || " ";
-  const handleCloseToggle = (category, description) => {
+  const handleCloseToggle = (category, description, id = undefined) => {
     setOpen(!open);
-    setValue({ category, description });
+    setValue({ category, description, id });
   };
 
   function submitHandler(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const req = {};
     for (var pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
+      req[pair[0]] = pair[1];
+    }
+    if (value.id) {
+      // put request
+      dataService
+        .editCategories(req.title, req.description, value.id)
+        .then((data) => {
+          setLoading(true);
+          dataService.getCategories().then((data) => {
+            setData(data);
+            setLoading(false);
+          });
+          setOpen(!open);
+        });
+    } else {
+      // post request
+      dataService.addCategories(req.title, req.description).then((data) => {
+        setLoading(true);
+        dataService.getCategories().then((data) => {
+          setData(data);
+          setLoading(false);
+        });
+        setOpen(!open);
+      });
     }
   }
 
@@ -96,7 +133,7 @@ export default function AlbumCategory(props) {
             name="title"
             fullWidth
             type="title"
-            value={value.category}
+            value={category}
             placeholder="Content Title"
           />
 
@@ -109,7 +146,7 @@ export default function AlbumCategory(props) {
             name="description"
             fullWidth
             type="description"
-            value={value.description}
+            value={description}
             placeholder="your description"
           />
 
@@ -151,12 +188,12 @@ export default function AlbumCategory(props) {
           </div>
 
           <Grid container spacing={4}>
-            {categories.map((card) => (
+            {data.map((card) => (
               <Grid item key={card.id} xs={12} sm={6} md={4}>
                 <Link
                   className={classes.ignore}
                   to={{
-                    pathname: `/category/${card.head}`,
+                    pathname: `/category/${card.title}`,
                     state: {
                       from: props.location,
                       data: {
@@ -175,7 +212,7 @@ export default function AlbumCategory(props) {
                     />
                     <CardContent className={classes.cardContent}>
                       <Typography gutterBottom variant="h5" component="h2">
-                        {card.head}
+                        {card.title}
                       </Typography>
                       <Typography>{card.description}</Typography>
                     </CardContent>
@@ -184,7 +221,11 @@ export default function AlbumCategory(props) {
                         <Button
                           onClick={(e) => {
                             e.preventDefault();
-                            handleCloseToggle(card.head, card.description);
+                            handleCloseToggle(
+                              card.head,
+                              card.description,
+                              card.id
+                            );
                             console.log("clicked");
                           }}
                           size="small"
@@ -201,6 +242,7 @@ export default function AlbumCategory(props) {
           </Grid>
         </Container>
       </main>
+      {isLoading && <CircularProgress />}
       <SimpleModal
         open={open}
         handleClose={handleCloseToggle}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -16,14 +16,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 import SimpleModal from "../../_components/Modal";
-
-function submitHandler(e) {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  for (var pair of formData.entries()) {
-    console.log(pair[0] + ": " + pair[1]);
-  }
-}
+import { dataService } from "../../_services/data.service";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -134,10 +127,18 @@ export default function AlbumCourses(props) {
   console.log(props);
   const user = props.user || " ";
 
+  function submitHandler(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    dataService.addCourse();
+  }
+
   const handleCloseToggle = (title, description) => {
     setOpen(!open);
     setValue({ title, description });
   };
+
+  useEffect(() => {}, []);
 
   const modalBody = (category, description, author) => (
     <>
@@ -180,7 +181,6 @@ export default function AlbumCourses(props) {
   return (
     <React.Fragment>
       <CssBaseline />
-
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
           <div className={classes.bar}>
