@@ -11,8 +11,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormLabel from "@material-ui/core/FormLabel";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 import SimpleModal from "../../_components/Modal";
+
+function submitHandler(e) {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  for (var pair of formData.entries()) {
+    console.log(pair[0] + ": " + pair[1]);
+  }
+}
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -47,6 +58,11 @@ const useStyles = makeStyles((theme) => ({
   },
   spacing: {
     margin: theme.spacing(1),
+  },
+  bottomButton: {
+    position: "fixed",
+    right: 20,
+    bottom: 20,
   },
 }));
 
@@ -125,27 +141,36 @@ export default function AlbumCourses(props) {
 
   const modalBody = (category, description, author) => (
     <>
-      <form action="/action_page.php">
-        <label for="category">Category Title</label>
-        <br />
-        <input
-          type="text"
-          id="category"
-          name="category"
-          value={value.category}
-        />
-        <br />
-        <label for="description">Description</label>
-        <br />
-        <input
-          type="text"
-          id="description"
-          name="description"
-          value={value.description}
-        />
-        <br />
-        <br />
-        <input type="submit" value="Submit" />
+      <form onSubmit={submitHandler}>
+        <FormGroup>
+          <FormLabel>
+            <Typography gutterBottom variant="h5" component="h2">
+              Category Title
+            </Typography>
+          </FormLabel>
+          <OutlinedInput
+            name="title"
+            fullWidth
+            type="title"
+            placeholder="Content Title"
+          />
+
+          <FormLabel>
+            <Typography gutterBottom variant="h5" component="h2">
+              Description
+            </Typography>
+          </FormLabel>
+          <OutlinedInput
+            name="description"
+            fullWidth
+            type="description"
+            placeholder="your description"
+          />
+
+          <Button className={classes.bottomButton} type="submit">
+            Submit
+          </Button>
+        </FormGroup>
       </form>
     </>
   );
