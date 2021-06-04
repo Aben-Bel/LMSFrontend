@@ -134,9 +134,9 @@ export default function AlbumCourses(props) {
   console.log(props);
   const user = props.user || " ";
 
-  const handleCloseToggle = (category, description) => {
+  const handleCloseToggle = (title, description) => {
     setOpen(!open);
-    setValue({ category, description });
+    setValue({ title, description });
   };
 
   const modalBody = (category, description, author) => (
@@ -145,13 +145,14 @@ export default function AlbumCourses(props) {
         <FormGroup>
           <FormLabel>
             <Typography gutterBottom variant="h5" component="h2">
-              Category Title
+              Course Title
             </Typography>
           </FormLabel>
           <OutlinedInput
             name="title"
             fullWidth
             type="title"
+            value={value.title}
             placeholder="Content Title"
           />
 
@@ -164,6 +165,7 @@ export default function AlbumCourses(props) {
             name="description"
             fullWidth
             type="description"
+            value={value.description}
             placeholder="your description"
           />
 
