@@ -17,6 +17,7 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 import SimpleModal from "../../_components/Modal";
 import { dataService } from "../../_services/data.service";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -56,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     right: 20,
     bottom: 20,
+  },
+  center: {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
   },
 }));
 
@@ -119,12 +125,15 @@ const courses = [
 export default function AlbumCourses(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [data, setData] = React.useState([]);
   const [value, setValue] = React.useState({});
+  const [isLoading, setLoading] = React.useState(false);
   const limit = 100;
   const rate = 4;
   const { categoryId, categoryDescription, categoryTitle } =
     props.location.state.data;
   console.log(props);
+
   const user = props.user || " ";
 
   function submitHandler(e) {
@@ -138,7 +147,19 @@ export default function AlbumCourses(props) {
     setValue({ title, description });
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setLoading(true);
+    dataService.getCourses(categoryId).then(
+      (data) => {
+        setData(data);
+        setLoading(false);
+      },
+      (error) => {
+        console.log(error);
+        setLoading(false);
+      }
+    );
+  }, []);
 
   const modalBody = (category, description, author) => (
     <>
@@ -200,7 +221,7 @@ export default function AlbumCourses(props) {
             )}
           </div>
           <Grid container spacing={4}>
-            {courses.map((card) => (
+            {data.map((card) => (
               <Grid item key={card.id} xs={12} sm={6} md={4}>
                 <Link
                   className={classes.ignore}
@@ -213,9 +234,9 @@ export default function AlbumCourses(props) {
                         categoryTitle: categoryTitle,
                         categoryDescription: categoryDescription,
                         courseId: card.id,
-                        courseTitle: card.head,
+                        courseTitle: card.title,
                         courseDescription: card.description,
-                        courseAuthor: card.author,
+                        courseAuthor: card.username,
                       },
                     },
                   }}
@@ -228,13 +249,13 @@ export default function AlbumCourses(props) {
                     />
                     <CardContent className={classes.cardContent}>
                       <Typography gutterBottom variant="h5" component="h2">
-                        {card.head}
+                        {card.title}
                       </Typography>
                       <Typography>
                         {card.description.slice(0, limit)}
                       </Typography>
                       <Typography variant="subtitle1" color="textSecondary">
-                        by {card.author}
+                        by {card.username}
                       </Typography>
                     </CardContent>
                     {user.role && user.role.includes("Teacher") && (
@@ -245,7 +266,7 @@ export default function AlbumCourses(props) {
                             handleCloseToggle(
                               card.head,
                               card.description,
-                              card.author
+                              card.username
                             );
                             console.log("clicked");
                           }}
@@ -259,7 +280,13 @@ export default function AlbumCourses(props) {
                     <Rating
                       className={classes.spacing}
                       readOnly="true"
-                      value={rate}
+                      value={() => {
+                        dataService
+                          .getRating(categoryId, card.id)
+                          .then((rating) => {
+                            console.log("rating: ", rating);
+                          });
+                      }}
                     />
                   </Card>
                 </Link>
@@ -268,6 +295,7 @@ export default function AlbumCourses(props) {
           </Grid>
         </Container>
       </main>
+      {isLoading && <CircularProgress className={classes.center} />}
       <SimpleModal
         open={open}
         handleClose={handleCloseToggle}

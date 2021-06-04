@@ -198,7 +198,7 @@ export default function AlbumCategory(props) {
                       from: props.location,
                       data: {
                         categoryId: card.id,
-                        categoryTitle: card.head,
+                        categoryTitle: card.title,
                         categoryDescription: card.description,
                       },
                     },

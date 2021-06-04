@@ -8,8 +8,15 @@ const token = JSON.parse(localStorage.getItem("currentUser")).token;
 const categoriesSubject = new BehaviorSubject(
   JSON.parse(localStorage.getItem("categories"))
 );
+const instance = axios.create({
+  baseURL: "http://localhost:5000/api/",
+  timeout: 1000,
+  headers: { Authorization: "Bearer " + token },
+});
 
 export const dataService = {
+  getCourses,
+  getRating,
   addCategories,
   editCategories,
   addCourse,
@@ -73,6 +80,33 @@ function editCategories(title, description, id) {
     .then(handleResponse)
     .then((categories) => {
       return categories;
+    });
+}
+
+function getCourses(categoryId) {
+  return instance.get(`category/${categoryId}/courses`).then((res) => {
+    console.log(res, " ", typeof res);
+    return res.data;
+  });
+}
+
+function getRating(categoryId, courseId) {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    Authorization: `Bearer ${token}`,
+  };
+
+  return fetch(
+    `/api/category/${categoryId}/courses/${courseId}/rating`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then((rating) => {
+      // store user details and jwt token in local storage to keep user logged in between page refreshes
+      //   localStorage.setItem("categories", JSON.stringify(categories));
+      //   categoriesSubject.next(categories);
+      return rating;
     });
 }
 
