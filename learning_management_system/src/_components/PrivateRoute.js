@@ -3,7 +3,12 @@ import { Route, Redirect } from "react-router-dom";
 
 import { authenticationService } from "../_services/authentication.service";
 
-export const PrivateRoute = ({ component: Component, roles, ...rest }) => {
+export const PrivateRoute = ({
+  component: Component,
+  roles,
+  user,
+  ...rest
+}) => {
   const currentUser = authenticationService.currentUserValue;
   return (
     <Route
@@ -25,7 +30,7 @@ export const PrivateRoute = ({ component: Component, roles, ...rest }) => {
         }
         console.log("let me redirect you now");
         // authorised so return component
-        return <Component {...props} />;
+        return <Component user={user} {...props} />;
       }}
     />
   );

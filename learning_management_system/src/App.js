@@ -1,6 +1,6 @@
 import "./App.css";
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import { history } from "./_helpers/history";
 import { PrivateRoute } from "./_components/PrivateRoute";
@@ -26,6 +26,8 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
+import AccountPage from "./_pages/AccountPage";
+import GoBack from "./_helpers/GoBack";
 
 configureFakeBackend();
 
@@ -40,12 +42,19 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "red",
   },
   rightalign: {
-    right: 0,
-    position: "absolute",
+    marginLeft: "auto",
     marginRight: theme.spacing(1),
+    display: "flex",
+  },
+  spacing: {
+    margin: theme.spacing(1),
   },
   zindexhigh: {
     zIndex: 10000000,
+  },
+  ignore: {
+    textDecoration: "none",
+    color: "inherit",
   },
 }));
 
@@ -70,16 +79,25 @@ function App() {
         <AppBar className={classes.zindexhigh} position="sticky">
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
-              {Role[currentUser.role]}
+              <a href="/student" className={classes.ignore}>
+                {Role[currentUser.role]}
+              </a>
             </Typography>
-
-            <Button
-              onClick={logout}
-              className={classes.rightalign}
-              color="inherit"
-            >
-              Logout
-            </Button>
+            <GoBack className={classes.spacing}>Go Back</GoBack>
+            <div className={classes.rightalign}>
+              <Button className={classes.spacing} color="inherit">
+                <a className={classes.ignore} href="/account">
+                  {currentUser.username}
+                </a>
+              </Button>
+              <Button
+                onClick={logout}
+                className={classes.spacing}
+                color="inherit"
+              >
+                Logout
+              </Button>
+            </div>
           </Toolbar>
         </AppBar>
       )}
@@ -89,6 +107,7 @@ function App() {
         <Route path={"/login"} component={LoginPage} />
         <Route path="/register" component={RegisterPage} />
 
+        <PrivateRoute path="/account" component={AccountPage} />
         <PrivateRoute
           path="/admin"
           roles={[Role.Admin]}
@@ -107,22 +126,25 @@ function App() {
 
         <PrivateRoute
           exact
+          user={currentUser}
           path="/category"
-          roles={[Role.Student]}
+          roles={[Role.Student, Role.Teacher]}
           component={AlbumCategory}
         />
 
         <PrivateRoute
           exact
+          user={currentUser}
           path="/category/:head"
-          roles={[Role.Student]}
+          roles={[Role.Student, Role.Teacher]}
           component={AlbumCourses}
         />
 
         <PrivateRoute
           exact
+          user={currentUser}
           path="/category/:head/courses/:head/contents"
-          roles={[Role.Student]}
+          roles={[Role.Student, Role.Teacher]}
           component={CourseDetail}
         />
       </Router>

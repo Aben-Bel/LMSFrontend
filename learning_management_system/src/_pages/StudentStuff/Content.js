@@ -25,7 +25,6 @@ export default function Content(props) {
   const classes = useStyles();
   const { id, title, contentType, courseAuthor } = props.data;
   const type = contentType ? contentType.toLowerCase() : "";
-  console.log("Author: ", courseAuthor);
 
   return (
     <Card className={classes.root}>
@@ -42,7 +41,7 @@ export default function Content(props) {
           </Typography>
           <div className={classes.author}>
             <Typography variant="subtitle1" color="textSecondary">
-              by {courseAuthor}
+              {courseAuthor && <div>by {courseAuthor}</div>}
             </Typography>
           </div>
         </div>
@@ -65,12 +64,15 @@ export default function Content(props) {
               <Note />
             </div>
           )}
+
+          {!type && (
+            <div>
+              <Typography variant="h4">
+                Select Contents from the left drawer and start learning
+              </Typography>
+            </div>
+          )}
         </CardContent>
-
-        {/* <div className={classes.ratingArea}>
-          <Typography>Give your rating on the content below</Typography>
-
-        </div> */}
       </div>
     </Card>
   );

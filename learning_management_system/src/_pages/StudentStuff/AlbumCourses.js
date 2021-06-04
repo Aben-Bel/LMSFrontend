@@ -10,6 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
+import Rating from "@material-ui/lab/Rating";
+
+import SimpleModal from "../../_components/Modal";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -34,6 +37,16 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginLeft: theme.spacing(3),
     marginTop: theme.spacing(3),
+  },
+  ignore: {
+    textDecoration: "none",
+  },
+  bar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  spacing: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -96,9 +109,46 @@ const courses = [
 
 export default function AlbumCourses(props) {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState({});
   const limit = 100;
+  const rate = 4;
   const { categoryId, categoryDescription, categoryTitle } =
     props.location.state.data;
+  console.log(props);
+  const user = props.user || " ";
+
+  const handleCloseToggle = (category, description) => {
+    setOpen(!open);
+    setValue({ category, description });
+  };
+
+  const modalBody = (category, description, author) => (
+    <>
+      <form action="/action_page.php">
+        <label for="category">Category Title</label>
+        <br />
+        <input
+          type="text"
+          id="category"
+          name="category"
+          value={value.category}
+        />
+        <br />
+        <label for="description">Description</label>
+        <br />
+        <input
+          type="text"
+          id="description"
+          name="description"
+          value={value.description}
+        />
+        <br />
+        <br />
+        <input type="submit" value="Submit" />
+      </form>
+    </>
+  );
 
   return (
     <React.Fragment>
@@ -106,19 +156,27 @@ export default function AlbumCourses(props) {
 
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
-          <Typography
-            component="h1"
-            variant="h2"
-            align="left"
-            color="textPrimary"
-            gutterBottom
-          >
-            {categoryTitle}
-          </Typography>
+          <div className={classes.bar}>
+            <Typography
+              component="h1"
+              variant="h2"
+              align="left"
+              color="textPrimary"
+              gutterBottom
+            >
+              {categoryTitle}
+            </Typography>
+            {user.role && user.role.includes("Teacher") && (
+              <Button onClick={() => handleCloseToggle("", "")} color="primary">
+                Add Course
+              </Button>
+            )}
+          </div>
           <Grid container spacing={4}>
             {courses.map((card) => (
               <Grid item key={card.id} xs={12} sm={6} md={4}>
                 <Link
+                  className={classes.ignore}
                   to={{
                     pathname: `/category/${categoryTitle}/courses/${card.id}/contents`,
                     state: {
@@ -152,14 +210,30 @@ export default function AlbumCourses(props) {
                         by {card.author}
                       </Typography>
                     </CardContent>
-                    <CardActions>
-                      <Button size="small" color="primary">
-                        View
-                      </Button>
-                      <Button size="small" color="primary">
-                        Edit
-                      </Button>
-                    </CardActions>
+                    {user.role && user.role.includes("Teacher") && (
+                      <CardActions>
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleCloseToggle(
+                              card.head,
+                              card.description,
+                              card.author
+                            );
+                            console.log("clicked");
+                          }}
+                          size="small"
+                          color="primary"
+                        >
+                          Edit
+                        </Button>
+                      </CardActions>
+                    )}
+                    <Rating
+                      className={classes.spacing}
+                      readOnly="true"
+                      value={rate}
+                    />
                   </Card>
                 </Link>
               </Grid>
@@ -167,6 +241,11 @@ export default function AlbumCourses(props) {
           </Grid>
         </Container>
       </main>
+      <SimpleModal
+        open={open}
+        handleClose={handleCloseToggle}
+        body={modalBody}
+      ></SimpleModal>
     </React.Fragment>
   );
 }

@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
+import SimpleModal from "../../_components/Modal";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -31,6 +32,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  ignore: {
+    textDecoration: "none",
+  },
+  bar: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
 }));
 
 const categories = [
@@ -47,7 +55,41 @@ const categories = [
 
 export default function AlbumCategory(props) {
   const classes = useStyles();
-  console.log("Category");
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState({});
+
+  const user = props.user || " ";
+  const handleCloseToggle = (category, description) => {
+    setOpen(!open);
+    setValue({ category, description });
+  };
+
+  const modalBody = (category, description) => (
+    <>
+      <form action="/action_page.php">
+        <label for="category">Category Title</label>
+        <br />
+        <input
+          type="text"
+          id="category"
+          name="category"
+          value={value.category}
+        />
+        <br />
+        <label for="description">Description</label>
+        <br />
+        <input
+          type="text"
+          id="description"
+          name="description"
+          value={value.description}
+        />
+        <br />
+        <br />
+        <input type="submit" value="Submit" />
+      </form>
+    </>
+  );
 
   return (
     <React.Fragment>
@@ -55,19 +97,34 @@ export default function AlbumCategory(props) {
 
       <main>
         <Container className={classes.cardGrid} maxWidth="md">
-          <Typography
-            component="h1"
-            variant="h2"
-            align="left"
-            color="textPrimary"
-            gutterBottom
-          >
-            Category
-          </Typography>
+          <div className={classes.bar}>
+            <Typography
+              component="h1"
+              variant="h2"
+              align="left"
+              color="textPrimary"
+              gutterBottom
+            >
+              Category
+            </Typography>
+
+            {user.role && user.role.includes("Teacher") && (
+              <Button
+                onClick={() => {
+                  handleCloseToggle("", "");
+                }}
+                color="primary"
+              >
+                Add Category
+              </Button>
+            )}
+          </div>
+
           <Grid container spacing={4}>
             {categories.map((card) => (
               <Grid item key={card.id} xs={12} sm={6} md={4}>
                 <Link
+                  className={classes.ignore}
                   to={{
                     pathname: `/category/${card.head}`,
                     state: {
@@ -92,14 +149,21 @@ export default function AlbumCategory(props) {
                       </Typography>
                       <Typography>{card.description}</Typography>
                     </CardContent>
-                    <CardActions>
-                      <Button size="small" color="primary">
-                        View
-                      </Button>
-                      <Button size="small" color="primary">
-                        Edit
-                      </Button>
-                    </CardActions>
+                    {user.role && user.role.includes("Teacher") && (
+                      <CardActions>
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleCloseToggle(card.head, card.description);
+                            console.log("clicked");
+                          }}
+                          size="small"
+                          color="primary"
+                        >
+                          Edit
+                        </Button>
+                      </CardActions>
+                    )}
                   </Card>
                 </Link>
               </Grid>
@@ -107,6 +171,11 @@ export default function AlbumCategory(props) {
           </Grid>
         </Container>
       </main>
+      <SimpleModal
+        open={open}
+        handleClose={handleCloseToggle}
+        body={modalBody}
+      ></SimpleModal>
     </React.Fragment>
   );
 }
