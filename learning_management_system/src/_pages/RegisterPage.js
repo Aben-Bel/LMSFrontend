@@ -10,6 +10,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { authenticationService } from "../_services/authentication.service";
 
 function Copyright() {
   return (
@@ -44,9 +45,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function RegisterPage() {
+export function RegisterPage(props) {
   const classes = useStyles();
 
+  function register(e) {
+    e.preventDefault();
+    const username = e.target.elements["username"].value;
+    const password = e.target.elements["password"].value;
+    const firstname = e.target.elements["firstName"].value;
+    const lastname = e.target.elements["lastName"].value;
+    const role = e.target.elements["role"].value;
+
+    authenticationService
+      .register(firstname, lastname, username, password, role)
+      .then(
+        (user) => {
+          const { from } = props.location.state || {
+            from: { pathname: "/" },
+          };
+          props.history.push(from);
+        },
+        (error) => {
+          console.log("error: ", error);
+        }
+      );
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -57,7 +80,7 @@ export function RegisterPage() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={register} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -87,10 +110,21 @@ export function RegisterPage() {
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="role"
+                label="Role"
+                name="role"
+                autoComplete="role"
               />
             </Grid>
             <Grid item xs={12}>

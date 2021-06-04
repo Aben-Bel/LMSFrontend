@@ -3,11 +3,15 @@ import { BehaviorSubject } from "rxjs";
 
 import { handleResponse } from "../_helpers/handle-response";
 
-const token = JSON.parse(localStorage.getItem("currentUser")).token;
+const token =
+  (JSON.parse(localStorage.getItem("currentUser")) &&
+    JSON.parse(localStorage.getItem("currentUser")).token) ||
+  " ";
 
 const categoriesSubject = new BehaviorSubject(
   JSON.parse(localStorage.getItem("categories"))
 );
+
 const instance = axios.create({
   baseURL: "http://localhost:5000/api/",
   timeout: 1000,
@@ -85,40 +89,28 @@ function editCategories(title, description, id) {
 
 function getCourses(categoryId) {
   return instance.get(`category/${categoryId}/courses`).then((res) => {
-    console.log(res, " ", typeof res);
     return res.data;
   });
 }
 
 function getRating(categoryId, courseId) {
-  const requestOptions = {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    Authorization: `Bearer ${token}`,
-  };
-
-  return fetch(
-    `/api/category/${categoryId}/courses/${courseId}/rating`,
-    requestOptions
-  )
-    .then(handleResponse)
-    .then((rating) => {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      //   localStorage.setItem("categories", JSON.stringify(categories));
-      //   categoriesSubject.next(categories);
-      return rating;
+  console.log("cat and cou ", categoryId, " ", courseId);
+  return instance
+    .get(`/category/${categoryId}/courses/${courseId}/rating`)
+    .then((res) => {
+      console.log("rating: ", res.dat);
+      return res.data;
     });
 }
 
 function addCourse(title, description, catid) {
   const requestOptions = {
     method: "POST",
-    accept: "application/json",
     Authorization: `Bearer ${token}`,
     headers: {
       "Content-Type": "application/json",
     },
-    body: { Title: title, Description: description },
+    body: JSON.stringify({ title, description }),
   };
 
   return fetch(
@@ -127,9 +119,6 @@ function addCourse(title, description, catid) {
   )
     .then(handleResponse)
     .then((courses) => {
-      //   localStorage.setItem("categories", JSON.stringify(categories));
-      //   categories.next(categories);
-      console.log("categories added: ", courses);
       return courses;
     });
 }

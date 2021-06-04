@@ -139,18 +139,64 @@ export default function AlbumCourses(props) {
   function submitHandler(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    dataService.addCourse();
+    const req = {};
+    for (var pair of formData.entries()) {
+      req[pair[0]] = pair[1];
+    }
+    if (value.id) {
+      // put request
+      dataService
+        .editCourse(req.title, req.description, value.id)
+        .then((data) => {
+          setLoading(true);
+          dataService.getCategories().then((data) => {
+            setData(data);
+            setLoading(false);
+          });
+          setOpen(!open);
+        });
+    } else {
+      // post request
+      dataService
+        .addCourse(req.title, req.description, categoryId)
+        .then((data) => {
+          setLoading(true);
+          dataService
+            .getCourses()
+            .then((data) => {
+              setData(data);
+              setLoading(false);
+            })
+            .catch(() => {
+              setLoading(false);
+            });
+          setOpen(!open);
+        });
+    }
   }
 
-  const handleCloseToggle = (title, description) => {
+  const handleCloseToggle = (title, description, id = undefined) => {
     setOpen(!open);
-    setValue({ title, description });
+    setValue({ title, description, id });
   };
 
   useEffect(() => {
     setLoading(true);
     dataService.getCourses(categoryId).then(
       (data) => {
+        // const result = [];
+        // data.forEach((element) => {
+        //   dataService
+        //     .getRating(element.categoryId, element.id)
+        //     .then((rating) => {
+        //       result.push({ rate: rating.value, ...element });
+        //     })
+        //     .catch((error) => {
+        //       result.push({ rate: 0, ...element });
+        //     });
+        // });
+        // console.log("res:", result);
+        // setData(result);
         setData(data);
         setLoading(false);
       },
@@ -161,7 +207,7 @@ export default function AlbumCourses(props) {
     );
   }, []);
 
-  const modalBody = (category, description, author) => (
+  const modalBody = (title, description, author) => (
     <>
       <form onSubmit={submitHandler}>
         <FormGroup>
@@ -174,7 +220,7 @@ export default function AlbumCourses(props) {
             name="title"
             fullWidth
             type="title"
-            value={value.title}
+            value={title}
             placeholder="Content Title"
           />
 
@@ -187,7 +233,7 @@ export default function AlbumCourses(props) {
             name="description"
             fullWidth
             type="description"
-            value={value.description}
+            value={description}
             placeholder="your description"
           />
 
@@ -264,9 +310,9 @@ export default function AlbumCourses(props) {
                           onClick={(e) => {
                             e.preventDefault();
                             handleCloseToggle(
-                              card.head,
+                              card.title,
                               card.description,
-                              card.username
+                              card.id
                             );
                             console.log("clicked");
                           }}
@@ -279,14 +325,8 @@ export default function AlbumCourses(props) {
                     )}
                     <Rating
                       className={classes.spacing}
-                      readOnly="true"
-                      value={() => {
-                        dataService
-                          .getRating(categoryId, card.id)
-                          .then((rating) => {
-                            console.log("rating: ", rating);
-                          });
-                      }}
+                      disabled={true}
+                      value={data.rate}
                     />
                   </Card>
                 </Link>

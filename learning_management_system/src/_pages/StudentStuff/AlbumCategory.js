@@ -222,7 +222,7 @@ export default function AlbumCategory(props) {
                           onClick={(e) => {
                             e.preventDefault();
                             handleCloseToggle(
-                              card.head,
+                              card.title,
                               card.description,
                               card.id
                             );
