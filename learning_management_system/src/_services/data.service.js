@@ -19,6 +19,8 @@ const instance = axios.create({
 });
 
 export const dataService = {
+  getContents,
+  addContent,
   editCourse,
   getCourses,
   getRating,
@@ -138,6 +140,45 @@ function editCourse(title, description, couid, catid) {
     .put(`http://localhost:5000/api/category/${catid}/courses/${couid}`, {
       title,
       description,
+    })
+    .then((res) => {
+      return res.data;
+    });
+}
+
+function getContents(categoryId, courseId) {
+  return instance
+    .get(`/category/${categoryId}/courses/${courseId}/content`)
+    .then((res) => {
+      console.log("axios:: ", res);
+      return res.data;
+    });
+}
+
+function addContent(title, type, data, catid, couid) {
+  // const requestOptions = {
+  //   method: "POST",
+  //   Authorization: `Bearer ${token}`,
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ title, type, data }),
+  // };
+
+  // return fetch(
+  //   `/api/category/${catid}/courses/${couid}/content`,
+  //   requestOptions
+  // )
+  //   .then(handleResponse)
+  //   .then((contents) => {
+  //     return contents;
+  //   });
+
+  return instance
+    .post(`/category/${catid}/courses/${couid}/content`, {
+      title,
+      type,
+      data,
     })
     .then((res) => {
       return res.data;

@@ -143,6 +143,7 @@ export default function AlbumCourses(props) {
     for (var pair of formData.entries()) {
       req[pair[0]] = pair[1];
     }
+
     if (value.id) {
       // put request
       dataService

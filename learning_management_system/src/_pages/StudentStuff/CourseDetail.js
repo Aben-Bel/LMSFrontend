@@ -1,6 +1,6 @@
 import { LayoutWithDrawer } from "../../_components/LayoutWithDrawer";
 import { makeStyles } from "@material-ui/core/styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Link } from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
@@ -175,33 +175,47 @@ export default function CourseDetail(props) {
   }
 
   function submitHandler(e) {
+    console.log("was here");
     e.preventDefault();
     const formData = new FormData(e.target);
     const req = {};
     for (var pair of formData.entries()) {
       req[pair[0]] = pair[1];
     }
+    req.data = req[req.type];
+
     if (req.type !== "video") {
-      dataService.addContent(req.title, req.type, req.data).then((data) => {
-        setLoading(true);
-        dataService
-          .getCourses()
-          .then((data) => {
-            setData(data);
-            setLoading(false);
-            setOpen(!open);
-          })
-          .catch(() => {
-            setLoading(false);
-            setOpen(!open);
-          });
-        setOpen(!open);
-      });
+      dataService
+        .addContent(req.title, req.type, req.data, categoryId, courseId)
+        .then((data) => {
+          setLoading(true);
+          console.log("about to create: ", req);
+          dataService
+            .getCourses()
+            .then((data) => {
+              setData(data);
+              setLoading(false);
+              setOpen(!open);
+            })
+            .catch(() => {
+              setLoading(false);
+              setOpen(!open);
+            });
+          setOpen(!open);
+        });
     } else {
     }
   }
 
-  const modalBody = (category, description, author) => (
+  useEffect(() => {
+    setLoading(true);
+    dataService.getContents(categoryId, courseId).then((data) => {
+      setData(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const modalBody = () => (
     <form onSubmit={submitHandler}>
       <FormGroup>
         <FormLabel>
@@ -351,7 +365,7 @@ export default function CourseDetail(props) {
               </ButtonBase>
             )}
 
-            {contents.map((ele) => (
+            {data.map((ele) => (
               <Link
                 key={ele.id}
                 onClick={(e) => {
