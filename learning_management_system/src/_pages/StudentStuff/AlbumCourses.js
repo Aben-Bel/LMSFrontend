@@ -146,13 +146,14 @@ export default function AlbumCourses(props) {
     if (value.id) {
       // put request
       dataService
-        .editCourse(req.title, req.description, value.id)
+        .editCourse(req.title, req.description, value.id, categoryId)
         .then((data) => {
           setLoading(true);
-          dataService.getCategories().then((data) => {
+          dataService.getCourses().then((data) => {
             setData(data);
             setLoading(false);
           });
+          setLoading(false);
           setOpen(!open);
         });
     } else {
@@ -166,9 +167,11 @@ export default function AlbumCourses(props) {
             .then((data) => {
               setData(data);
               setLoading(false);
+              setOpen(!open);
             })
             .catch(() => {
               setLoading(false);
+              setOpen(!open);
             });
           setOpen(!open);
         });
@@ -207,43 +210,47 @@ export default function AlbumCourses(props) {
     );
   }, []);
 
-  const modalBody = (title, description, author) => (
-    <>
-      <form onSubmit={submitHandler}>
-        <FormGroup>
-          <FormLabel>
-            <Typography gutterBottom variant="h5" component="h2">
-              Course Title
-            </Typography>
-          </FormLabel>
-          <OutlinedInput
-            name="title"
-            fullWidth
-            type="title"
-            value={title}
-            placeholder="Content Title"
-          />
+  const modalBody = () => {
+    const title = value.title;
+    const description = value.description;
+    return (
+      <>
+        <form onSubmit={submitHandler}>
+          <FormGroup>
+            <FormLabel>
+              <Typography gutterBottom variant="h5" component="h2">
+                Course Title
+              </Typography>
+            </FormLabel>
+            <OutlinedInput
+              name="title"
+              fullWidth
+              type="title"
+              value={title}
+              placeholder="Content Title"
+            />
 
-          <FormLabel>
-            <Typography gutterBottom variant="h5" component="h2">
-              Description
-            </Typography>
-          </FormLabel>
-          <OutlinedInput
-            name="description"
-            fullWidth
-            type="description"
-            value={description}
-            placeholder="your description"
-          />
+            <FormLabel>
+              <Typography gutterBottom variant="h5" component="h2">
+                Description
+              </Typography>
+            </FormLabel>
+            <OutlinedInput
+              name="description"
+              fullWidth
+              type="description"
+              value={description}
+              placeholder="your description"
+            />
 
-          <Button className={classes.bottomButton} type="submit">
-            Submit
-          </Button>
-        </FormGroup>
-      </form>
-    </>
-  );
+            <Button className={classes.bottomButton} type="submit">
+              Submit
+            </Button>
+          </FormGroup>
+        </form>
+      </>
+    );
+  };
 
   return (
     <React.Fragment>

@@ -19,6 +19,7 @@ const instance = axios.create({
 });
 
 export const dataService = {
+  editCourse,
   getCourses,
   getRating,
   addCategories,
@@ -88,7 +89,7 @@ function editCategories(title, description, id) {
 }
 
 function getCourses(categoryId) {
-  return instance.get(`category/${categoryId}/courses`).then((res) => {
+  return instance.get(`/category/${categoryId}/courses`).then((res) => {
     return res.data;
   });
 }
@@ -120,5 +121,25 @@ function addCourse(title, description, catid) {
     .then(handleResponse)
     .then((courses) => {
       return courses;
+    });
+}
+
+function editCourse(title, description, couid, catid) {
+  const requestOptions = {
+    method: "PUT",
+    Authorization: `Bearer ${token}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, description }),
+  };
+
+  return instance
+    .put(`http://localhost:5000/api/category/${catid}/courses/${couid}`, {
+      title,
+      description,
+    })
+    .then((res) => {
+      return res.data;
     });
 }

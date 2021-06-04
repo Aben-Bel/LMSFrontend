@@ -120,43 +120,47 @@ export default function AlbumCategory(props) {
     }
   }
 
-  const modalBody = (category, description) => (
-    <>
-      <form onSubmit={submitHandler}>
-        <FormGroup>
-          <FormLabel>
-            <Typography gutterBottom variant="h5" component="h2">
-              Category Title
-            </Typography>
-          </FormLabel>
-          <OutlinedInput
-            name="title"
-            fullWidth
-            type="title"
-            value={category}
-            placeholder="Content Title"
-          />
+  const modalBody = () => {
+    const title = value.category;
+    const description = value.description;
+    return (
+      <>
+        <form onSubmit={submitHandler}>
+          <FormGroup>
+            <FormLabel>
+              <Typography gutterBottom variant="h5" component="h2">
+                Category Title
+              </Typography>
+            </FormLabel>
+            <OutlinedInput
+              name="title"
+              fullWidth
+              type="title"
+              value={title}
+              placeholder="Content Title"
+            />
 
-          <FormLabel>
-            <Typography gutterBottom variant="h5" component="h2">
-              Description
-            </Typography>
-          </FormLabel>
-          <OutlinedInput
-            name="description"
-            fullWidth
-            type="description"
-            value={description}
-            placeholder="your description"
-          />
+            <FormLabel>
+              <Typography gutterBottom variant="h5" component="h2">
+                Description
+              </Typography>
+            </FormLabel>
+            <OutlinedInput
+              name="description"
+              fullWidth
+              type="description"
+              value={description}
+              placeholder="your description"
+            />
 
-          <Button className={classes.bottomButton} type="submit">
-            Submit
-          </Button>
-        </FormGroup>
-      </form>
-    </>
-  );
+            <Button className={classes.bottomButton} type="submit">
+              Submit
+            </Button>
+          </FormGroup>
+        </form>
+      </>
+    );
+  };
 
   return (
     <React.Fragment>

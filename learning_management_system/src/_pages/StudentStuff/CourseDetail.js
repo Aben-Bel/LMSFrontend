@@ -22,6 +22,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { useTheme } from "@material-ui/core/styles";
+import { dataService } from "../../_services/data.service";
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -105,6 +106,8 @@ export default function CourseDetail(props) {
   const rate = 4;
   const [type, setType] = useState("");
   const [selected, setSelected] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
   const [content, setContent] = useState({
     id: 0,
     contentTitle: "",
@@ -174,8 +177,27 @@ export default function CourseDetail(props) {
   function submitHandler(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const req = {};
     for (var pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
+      req[pair[0]] = pair[1];
+    }
+    if (req.type !== "video") {
+      dataService.addContent(req.title, req.type, req.data).then((data) => {
+        setLoading(true);
+        dataService
+          .getCourses()
+          .then((data) => {
+            setData(data);
+            setLoading(false);
+            setOpen(!open);
+          })
+          .catch(() => {
+            setLoading(false);
+            setOpen(!open);
+          });
+        setOpen(!open);
+      });
+    } else {
     }
   }
 
